@@ -73,7 +73,7 @@ public class Ornek1 extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Ekle");
+        jButton3.setText("Kaydet");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
