@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -45,6 +46,8 @@ public class Ornek1 extends javax.swing.JFrame {
         txtMaas = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +73,20 @@ public class Ornek1 extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("Ekle");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Sil");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,9 +106,13 @@ public class Ornek1 extends javax.swing.JFrame {
                         .addComponent(txtMaas, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE))
                     .addComponent(txtSoyadi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -106,7 +127,9 @@ public class Ornek1 extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtAdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -115,31 +138,36 @@ public class Ornek1 extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(txtMaas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(162, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
+        try {
             // Bağlantı kurma
-            Connection con=DriverManager.getConnection("jdbc:derby://localhost:1527/sample","app","app");
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
             //Çalışacak SQL komutunu hazırlama 
-            String sql="SELECT * FROM personel WHERE personel_id=?";
-            PreparedStatement ps=con.prepareStatement(sql);
+            String sql = "SELECT * FROM personel WHERE personel_id=?";
+            PreparedStatement ps = con.prepareStatement(sql);
             //ParametrGizemGieyi atama
             ps.setInt(1, Integer.parseInt(txtId.getText()));
-            
+
             //Komutu çalıştırma
-            ResultSet rs=ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             //Sonuçları javadaki değişkenlere atama
-            if(rs.next()){
+            if (rs.next()) {
                 txtAdi.setText(rs.getString("ADI"));
                 txtSoyadi.setText(rs.getString("SOYADI"));
                 txtMaas.setText(String.valueOf(rs.getInt("MAAS")));
-            }
+            }else{
+                txtAdi.setText(null);
+                txtSoyadi.setText(null);
+                txtMaas.setText(null);
             
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(Ornek1.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,30 +175,84 @@ public class Ornek1 extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try{
+        try {
             // Bağlantı kurma
-            Connection con=DriverManager.getConnection("jdbc:derby://localhost:1527/sample","app","app");
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
             //Çalışacak SQL komutunu hazırlama 
-            String sql="SELECT * FROM personel";
-            PreparedStatement ps=con.prepareStatement(sql);
+            String sql = "SELECT * FROM personel";
+            PreparedStatement ps = con.prepareStatement(sql);
             //Komutu çalıştırma
-            ResultSet rs=ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             //Sonuçları javadaki değişkenlere atama
-            int enBuyukId=0;
-            while (rs.next()){
-                if (rs.getInt("personel_id")>enBuyukId){
-                    enBuyukId =  rs.getInt("personel_id");
+            int enBuyukId = 0;
+            while (rs.next()) {
+                if (rs.getInt("personel_id") > enBuyukId) {
+                    enBuyukId = rs.getInt("personel_id");
                 }
             }
-            txtId.setText(String.valueOf(enBuyukId+1));
-            
+            txtId.setText(String.valueOf(enBuyukId + 1));
+
         } catch (SQLException ex) {
             Logger.getLogger(Ornek1.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            // TODO add your handling code here:
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
+            //Kayıt var mı kontrolü
+            if (!kayitVarmi(con)) {
+                String sql = "INSERT INTO personel (personel_id,adi,soyadi,maas) VALUES (?,?,?,?)";
+                PreparedStatement psInsert = con.prepareStatement(sql);
+                psInsert.setInt(1, Integer.parseInt(txtId.getText()));
+                psInsert.setString(2, txtAdi.getText());
+                psInsert.setString(3, txtSoyadi.getText());
+                psInsert.setInt(4, Integer.parseInt(txtMaas.getText()));
+                psInsert.executeUpdate();
+            } else {
+                String sql = "UPDATE personel SET adi=?,soyadi=?,maas=? WHERE personel_id=?";
+                PreparedStatement psInsert = con.prepareStatement(sql);
+                psInsert.setString(1, txtAdi.getText());
+                psInsert.setString(2, txtSoyadi.getText());
+                psInsert.setInt(3, Integer.parseInt(txtMaas.getText()));
+                psInsert.setInt(4, Integer.parseInt(txtId.getText()));
+                psInsert.executeUpdate();
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Ornek1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try {
+            // TODO add your handling code here:
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample", "app", "app");
+            //Kayıt var mı kontrolü
+            if (kayitVarmi(con)) {
+                int i = JOptionPane.showConfirmDialog(this, "Kayıt silinsin mi?");
+                if (i == JOptionPane.YES_OPTION) {
+                    String sql = "DELETE FROM personel WHERE personel_id=?";
+                    PreparedStatement psInsert = con.prepareStatement(sql);
+                    psInsert.setInt(1, Integer.parseInt(txtId.getText()));
+                    psInsert.executeUpdate();
+
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Ornek1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+    boolean kayitVarmi(Connection con) throws SQLException {
+        String sql = "SELECT * FROM personel WHERE personel_id=?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, Integer.parseInt(txtId.getText()));
+        ResultSet rs = ps.executeQuery();
+        return rs.next();
+    }
 
     /**
      * @param args the command line arguments
@@ -210,6 +292,8 @@ public class Ornek1 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
